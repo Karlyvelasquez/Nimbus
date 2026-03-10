@@ -9,7 +9,6 @@ from typing import Optional, List, Dict
 
 
 def _get_client():
-    """Retorna cliente OpenAI o None si no hay API key."""
     api_key = os.getenv("OPENAI_API_KEY")
     if not api_key:
         return None
@@ -51,11 +50,10 @@ def generate_llm_answer(context: Dict,
 						model: str = "gpt-4o-mini",
 						temperature: float = 0.0,
 						max_tokens: int = 500) -> Dict:
-	"""Genera una respuesta del LLM usando el contexto (Pendiente).
-	"""
+
 	client = _get_client()
 	if client is None:
-		return {"ok": False, "error": "OPENAI_API_KEY no configurada"}
+		return {"ok": False, "error": "OPENAI_API_KEY NO ESTABLECIDA"}
 
 	messages = [
 		{"role": "system", "content": system_prompt},
@@ -72,7 +70,10 @@ def generate_llm_answer(context: Dict,
 		text = None
 		if hasattr(resp, "choices") and len(resp.choices) > 0:
 			choice = resp.choices[0]
-			text = getattr(choice, "message", None) or getattr(choice, "text", None) or str(choice)
+			if hasattr(choice.message, "content"):
+				text = choice.message.content
+			else:
+				text = str(choice.message)
 		return {"ok": True, "text": text}
 	except Exception as e:
 		logging.exception("LLM error")
