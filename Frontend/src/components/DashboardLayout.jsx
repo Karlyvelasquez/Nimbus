@@ -11,7 +11,13 @@ import {
   ChevronDown,
   Sun,
   Moon,
-  Globe
+  Globe,
+  Radio,
+  MapPin,
+  FileText,
+  Bell,
+  BookOpen,
+  MessageCircle
 } from 'lucide-react'
 import { Link, useLocation } from 'react-router-dom'
 import { translations } from '../translations'
@@ -22,23 +28,46 @@ const DashboardLayout = ({ children, userRole = "ML Expert", darkMode, toggleDar
   const location = useLocation()
   const t = translations[language] || translations['en']
 
-  const menuItems = [
-    { icon: LayoutDashboard, label: t.overview, path: '/dashboard/ml-expert' },
-    { icon: BarChart3, label: t.analytics, path: '/dashboard/ml-expert/analytics' },
-    { icon: Database, label: t.dataManagement, path: '/dashboard/ml-expert/data' },
-    { icon: Settings, label: t.settings, path: '/dashboard/ml-expert/settings' },
-  ]
+  // Menu items based on user role
+  const getMenuItems = () => {
+    switch(userRole) {
+      case "Meteorologist":
+        return [
+          { icon: LayoutDashboard, label: 'Overview', path: '/dashboard/meteorologist' },
+          { icon: Radio, label: 'Live Data', path: '/dashboard/meteorologist/live-data' },
+          { icon: MapPin, label: 'Stations', path: '/dashboard/meteorologist/stations' },
+          { icon: FileText, label: 'Reports', path: '/dashboard/meteorologist/reports' },
+        ]
+      case "Community":
+        return [
+          { icon: LayoutDashboard, label: language === 'es' ? 'Inicio' : 'Home', path: '/dashboard/community' },
+          { icon: Bell, label: language === 'es' ? 'Alertas' : 'Alerts', path: '/dashboard/community/alerts' },
+          { icon: BookOpen, label: language === 'es' ? 'Educación' : 'Education', path: '/dashboard/community/education' },
+          { icon: MessageCircle, label: 'Telegram', path: '/dashboard/community/telegram' },
+        ]
+      case "ML Expert":
+      default:
+        return [
+          { icon: LayoutDashboard, label: t.overview, path: '/dashboard/ml-expert' },
+          { icon: BarChart3, label: t.analytics, path: '/dashboard/ml-expert/analytics' },
+          { icon: Database, label: t.dataManagement, path: '/dashboard/ml-expert/data' },
+          { icon: Settings, label: t.settings, path: '/dashboard/ml-expert/settings' },
+        ]
+    }
+  }
+
+  const menuItems = getMenuItems()
 
   return (
-    <div className="min-h-screen bg-nimbus-light dark:bg-nimbus-dark flex">
+    <div className="h-screen bg-nimbus-light dark:bg-nimbus-dark flex overflow-hidden">
       {/* Sidebar */}
       <aside
         className={`${
           sidebarOpen ? 'w-64' : 'w-20'
-        } bg-white dark:bg-nimbus-blue/10 border-r border-nimbus-cream dark:border-nimbus-blue/20 transition-all duration-300 flex flex-col`}
+        } h-screen bg-white dark:bg-nimbus-blue/10 border-r border-nimbus-cream dark:border-nimbus-blue/20 transition-all duration-300 flex flex-col flex-shrink-0`}
       >
         {/* Logo Section */}
-        <div className="p-6 border-b border-nimbus-cream dark:border-nimbus-blue/20 flex items-center justify-between">
+        <div className="p-6 border-b border-nimbus-cream dark:border-nimbus-blue/20 flex items-center justify-between flex-shrink-0">
           {sidebarOpen && (
             <div className="flex items-center space-x-3">
               <img
@@ -70,7 +99,7 @@ const DashboardLayout = ({ children, userRole = "ML Expert", darkMode, toggleDar
 
         {/* Role Badge */}
         {sidebarOpen && (
-          <div className="px-6 py-4">
+          <div className="px-6 py-4 flex-shrink-0">
             <div className="bg-nimbus-dark dark:bg-nimbus-blue text-white px-3 py-2 rounded-lg text-sm font-semibold text-center">
               {userRole}
             </div>
@@ -78,7 +107,7 @@ const DashboardLayout = ({ children, userRole = "ML Expert", darkMode, toggleDar
         )}
 
         {/* Navigation Menu */}
-        <nav className="flex-1 px-3 py-4 space-y-2">
+        <nav className="flex-1 px-3 py-4 space-y-2 overflow-y-auto">
           {menuItems.map((item, index) => {
             const isActive = location.pathname === item.path
             return (
@@ -101,10 +130,23 @@ const DashboardLayout = ({ children, userRole = "ML Expert", darkMode, toggleDar
           })}
         </nav>
 
-        {/* Footer */}
-        <div className="p-4 border-t border-nimbus-cream dark:border-nimbus-blue/20">
+        {/* Logout Button and Footer */}
+        <div className="p-3 border-t border-nimbus-cream dark:border-nimbus-blue/20 space-y-2 flex-shrink-0">
+          <button
+            onClick={() => {
+              window.close()
+              window.location.href = '/'
+            }}
+            className="flex items-center space-x-3 px-3 py-3 rounded-lg text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 transition-all w-full"
+            title={!sidebarOpen ? t.logOut : ''}
+          >
+            <LogOut className="w-5 h-5 flex-shrink-0" />
+            {sidebarOpen && (
+              <span className="font-medium">{t.logOut}</span>
+            )}
+          </button>
           {sidebarOpen && (
-            <p className="text-xs text-nimbus-dark/50 dark:text-nimbus-light/50 text-center">
+            <p className="text-xs text-nimbus-dark/50 dark:text-nimbus-light/50 text-center pt-2">
               © 2026 Nimbus
             </p>
           )}
@@ -112,9 +154,9 @@ const DashboardLayout = ({ children, userRole = "ML Expert", darkMode, toggleDar
       </aside>
 
       {/* Main Content */}
-      <div className="flex-1 flex flex-col">
+      <div className="flex-1 h-screen flex flex-col overflow-hidden">
         {/* Top Header */}
-        <header className="bg-white dark:bg-nimbus-blue/10 border-b border-nimbus-cream dark:border-nimbus-blue/20 px-8 py-4">
+        <header className="bg-white dark:bg-nimbus-blue/10 border-b border-nimbus-cream dark:border-nimbus-blue/20 px-8 py-4 flex-shrink-0">
           <div className="flex items-center justify-between">
             <div>
               <h1 className="text-2xl font-bold text-nimbus-dark dark:text-nimbus-light">

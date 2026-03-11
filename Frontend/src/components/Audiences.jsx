@@ -19,14 +19,14 @@ const Audiences = ({ language }) => {
       title: t.audienceMet,
       description: t.audienceMetDesc,
       color: 'bg-nimbus-blue',
-      link: '#',
+      link: '/dashboard/meteorologist',
     },
     {
       icon: Users,
       title: t.audienceUser,
       description: t.audienceUserDesc,
       color: 'bg-[#4d6e91]',
-      link: '#',
+      link: '/dashboard/community',
     },
   ]
 

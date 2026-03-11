@@ -11,6 +11,15 @@ import DashboardMLExpert from './pages/DashboardMLExpert'
 import DashboardMLExpertAnalytics from './pages/DashboardMLExpertAnalytics'
 import DashboardMLExpertData from './pages/DashboardMLExpertData'
 import DashboardMLExpertSettings from './pages/DashboardMLExpertSettings'
+import DashboardMeteorologist from './pages/DashboardMeteorologist'
+import DashboardMeteorologistLiveData from './pages/DashboardMeteorologistLiveData'
+import DashboardMeteorologistStations from './pages/DashboardMeteorologistStations'
+import DashboardMeteorologistReports from './pages/DashboardMeteorologistReports'
+import DashboardCommunity from './pages/DashboardCommunity'
+import DashboardCommunityAlerts from './pages/DashboardCommunityAlerts'
+import DashboardCommunityEducation from './pages/DashboardCommunityEducation'
+import DashboardCommunityTelegram from './pages/DashboardCommunityTelegram'
+import DashboardCommunityEmergency from './pages/DashboardCommunityEmergency'
 
 function LandingPage({ darkMode, toggleDarkMode, language, toggleLanguage }) {
   const [showSplash, setShowSplash] = useState(true)
@@ -114,6 +123,78 @@ function App() {
       } />
       <Route path="/dashboard/ml-expert/settings" element={
         <DashboardMLExpertSettings 
+          darkMode={darkMode}
+          toggleDarkMode={toggleDarkMode}
+          language={language}
+          toggleLanguage={toggleLanguage}
+        />
+      } />
+      <Route path="/dashboard/meteorologist" element={
+        <DashboardMeteorologist 
+          darkMode={darkMode}
+          toggleDarkMode={toggleDarkMode}
+          language={language}
+          toggleLanguage={toggleLanguage}
+        />
+      } />
+      <Route path="/dashboard/meteorologist/live-data" element={
+        <DashboardMeteorologistLiveData 
+          darkMode={darkMode}
+          toggleDarkMode={toggleDarkMode}
+          language={language}
+          toggleLanguage={toggleLanguage}
+        />
+      } />
+      <Route path="/dashboard/meteorologist/stations" element={
+        <DashboardMeteorologistStations 
+          darkMode={darkMode}
+          toggleDarkMode={toggleDarkMode}
+          language={language}
+          toggleLanguage={toggleLanguage}
+        />
+      } />
+      <Route path="/dashboard/meteorologist/reports" element={
+        <DashboardMeteorologistReports 
+          darkMode={darkMode}
+          toggleDarkMode={toggleDarkMode}
+          language={language}
+          toggleLanguage={toggleLanguage}
+        />
+      } />
+      <Route path="/dashboard/community" element={
+        <DashboardCommunity 
+          darkMode={darkMode}
+          toggleDarkMode={toggleDarkMode}
+          language={language}
+          toggleLanguage={toggleLanguage}
+        />
+      } />
+      <Route path="/dashboard/community/alerts" element={
+        <DashboardCommunityAlerts 
+          darkMode={darkMode}
+          toggleDarkMode={toggleDarkMode}
+          language={language}
+          toggleLanguage={toggleLanguage}
+        />
+      } />
+      <Route path="/dashboard/community/education" element={
+        <DashboardCommunityEducation 
+          darkMode={darkMode}
+          toggleDarkMode={toggleDarkMode}
+          language={language}
+          toggleLanguage={toggleLanguage}
+        />
+      } />
+      <Route path="/dashboard/community/telegram" element={
+        <DashboardCommunityTelegram 
+          darkMode={darkMode}
+          toggleDarkMode={toggleDarkMode}
+          language={language}
+          toggleLanguage={toggleLanguage}
+        />
+      } />
+      <Route path="/dashboard/community/emergency" element={
+        <DashboardCommunityEmergency 
           darkMode={darkMode}
           toggleDarkMode={toggleDarkMode}
           language={language}

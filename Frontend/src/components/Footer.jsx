@@ -29,7 +29,9 @@ const Footer = ({ language, darkMode }) => {
               </p>
               <div className="flex space-x-4">
                 <a
-                  href="#"
+                  href="https://github.com/Karlyvelasquez/Nimbus"
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="w-10 h-10 bg-white/10 hover:bg-white/20 rounded-full flex items-center justify-center transition-colors"
                   aria-label="GitHub"
                 >

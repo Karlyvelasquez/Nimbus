@@ -94,7 +94,7 @@ const Hero = ({ language, darkMode }) => {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: 0.4 }}
-                className="text-lg md:text-xl text-nimbus-blue dark:text-nimbus-cream mb-6 font-semibold"
+                className="text-lg md:text-xl text-nimbus-dark dark:text-nimbus-cream mb-6 font-semibold"
               >
                 {t.heroSubtitle}
               </motion.p>
@@ -104,7 +104,7 @@ const Hero = ({ language, darkMode }) => {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: 0.6 }}
-                className="text-base text-nimbus-dark/80 dark:text-nimbus-light/80 mb-8"
+                className="text-base text-nimbus-dark dark:text-nimbus-light/80 mb-8 font-medium"
               >
                 {t.heroDescription}
               </motion.p>
