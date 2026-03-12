@@ -189,8 +189,25 @@ const DashboardMLExpert = ({ darkMode, toggleDarkMode, language, toggleLanguage 
     
     // Crear documento PDF
     const doc = new jsPDF()
-    const currentMetrics = metricsData[selectedModel]
+    
+    // Obtener métricas según el modelo y estación seleccionados
+    let currentMetrics
     const modelName = selectedModel.toUpperCase()
+    const stationNames = {
+      junco: 'El Junco',
+      cerroAlto: 'Cerro Alto',
+      merceditas: 'Merceditas',
+      mirador: 'El Mirador'
+    }
+    const stationName = stationNames[selectedStation]
+    
+    if (selectedModel === 'tnn') {
+      currentMetrics = metricsData[selectedStation].tnn[tnnHorizon]
+    } else if (selectedModel === 'gru') {
+      currentMetrics = metricsData[selectedStation].gru[gruHorizon]
+    } else {
+      currentMetrics = metricsData[selectedStation][selectedModel]
+    }
     
     // Configuración de colores
     const primaryColor = [8, 53, 89] // nimbus-dark
@@ -207,36 +224,54 @@ const DashboardMLExpert = ({ darkMode, toggleDarkMode, language, toggleLanguage 
     doc.setFont('helvetica', 'normal')
     doc.text('ML Expert Dashboard - Model Performance Report', 20, 30)
     
-    // Fecha y modelo
+    // Fecha, modelo y estación
     doc.setTextColor(0, 0, 0)
     doc.setFontSize(10)
     doc.text(`Generated: ${new Date().toLocaleDateString()} ${new Date().toLocaleTimeString()}`, 20, 50)
-    doc.text(`Model: ${modelName} (Production)`, 20, 56)
+    doc.text(`Model: ${modelName}`, 20, 56)
+    doc.text(`Station: ${stationName}`, 20, 62)
+    if (selectedModel === 'tnn') {
+      doc.text(`Horizon: ${tnnHorizon}`, 20, 68)
+    } else if (selectedModel === 'gru') {
+      doc.text(`Horizon: ${gruHorizon}`, 20, 68)
+    }
     
     // Línea separadora
     doc.setDrawColor(...secondaryColor)
     doc.setLineWidth(0.5)
-    doc.line(20, 62, 190, 62)
+    const separatorY = selectedModel === 'tnn' || selectedModel === 'gru' ? 74 : 68
+    doc.line(20, separatorY, 190, separatorY)
     
     // Métricas principales
     doc.setFontSize(16)
     doc.setFont('helvetica', 'bold')
     doc.setTextColor(...primaryColor)
-    doc.text('Performance Metrics', 20, 72)
+    doc.text('Performance Metrics', 20, separatorY + 10)
     
-    // Tabla de métricas
-    const metricsTable = [
-      ['Metric', 'Score', 'Status'],
-      ['Macro F1', `${(currentMetrics.macroF1 * 100).toFixed(1)}%`, currentMetrics.macroF1 > 0.85 ? 'Excellent' : 'Good'],
-      ['Micro F1', `${(currentMetrics.microF1 * 100).toFixed(1)}%`, currentMetrics.microF1 > 0.85 ? 'Excellent' : 'Good'],
-      ['Weighted F1', `${(currentMetrics.weightedF1 * 100).toFixed(1)}%`, currentMetrics.weightedF1 > 0.85 ? 'Excellent' : 'Good'],
-      ['Precision', `${(currentMetrics.precision * 100).toFixed(1)}%`, currentMetrics.precision > 0.85 ? 'Excellent' : 'Good'],
-      ['Recall', `${(currentMetrics.recall * 100).toFixed(1)}%`, currentMetrics.recall > 0.85 ? 'Excellent' : 'Good'],
-      ['Accuracy', `${(currentMetrics.accuracy * 100).toFixed(1)}%`, currentMetrics.accuracy > 0.85 ? 'Excellent' : 'Good'],
-    ]
+    // Tabla de métricas según tipo de modelo
+    let metricsTable
+    if (selectedModel === 'gru') {
+      // Métricas de regresión para GRU
+      metricsTable = [
+        ['Metric', 'Score', 'Status'],
+        ['RMSE', `${currentMetrics.rmse.toFixed(4)} mm`, currentMetrics.rmse < 2.0 ? 'Excellent' : 'Good'],
+        ['MAE', `${currentMetrics.mae.toFixed(4)} mm`, currentMetrics.mae < 1.5 ? 'Excellent' : 'Good'],
+        ['R²', `${currentMetrics.r2.toFixed(4)}`, currentMetrics.r2 > 0.80 ? 'Excellent' : 'Good'],
+      ]
+    } else {
+      // Métricas de clasificación para TNN, RNN, LSTM, LNN
+      metricsTable = [
+        ['Metric', 'Score', 'Status'],
+        ['Macro F1', `${(currentMetrics.macroF1 * 100).toFixed(1)}%`, currentMetrics.macroF1 > 0.50 ? 'Excellent' : 'Good'],
+        ['Weighted F1', `${(currentMetrics.weightedF1 * 100).toFixed(1)}%`, currentMetrics.weightedF1 > 0.70 ? 'Excellent' : 'Good'],
+        ['Precision', `${(currentMetrics.precision * 100).toFixed(1)}%`, currentMetrics.precision > 0.60 ? 'Excellent' : 'Good'],
+        ['Recall', `${(currentMetrics.recall * 100).toFixed(1)}%`, currentMetrics.recall > 0.60 ? 'Excellent' : 'Good'],
+        ['Accuracy', `${(currentMetrics.accuracy * 100).toFixed(1)}%`, currentMetrics.accuracy > 0.70 ? 'Excellent' : 'Good'],
+      ]
+    }
     
     doc.autoTable({
-      startY: 78,
+      startY: separatorY + 16,
       head: [metricsTable[0]],
       body: metricsTable.slice(1),
       theme: 'striped',
@@ -256,12 +291,29 @@ const DashboardMLExpert = ({ darkMode, toggleDarkMode, language, toggleLanguage 
     doc.setTextColor(...primaryColor)
     doc.text('Model Comparison', 20, finalY)
     
-    const comparisonTable = [
-      ['Model', 'Accuracy', 'F1 Score', 'Precision', 'Recall'],
-      ['RNN Baseline', '75.0%', '72.0%', '73.0%', '71.0%'],
-      ['LSTM + Attention', '89.0%', '87.0%', '88.0%', '86.0%'],
-      ['Liquid Neural Net', '92.0%', '91.0%', '90.0%', '92.0%'],
-    ]
+    // Tabla de comparación según estación seleccionada
+    const stationModels = metricsData[selectedStation]
+    let comparisonTable
+    
+    if (selectedModel === 'gru') {
+      // Comparación de horizontes para GRU
+      comparisonTable = [
+        ['Horizon', 'RMSE (mm)', 'MAE (mm)', 'R²'],
+        ['1 hour', stationModels.gru['1h'].rmse.toFixed(4), stationModels.gru['1h'].mae.toFixed(4), stationModels.gru['1h'].r2.toFixed(4)],
+        ['3 hours', stationModels.gru['3h'].rmse.toFixed(4), stationModels.gru['3h'].mae.toFixed(4), stationModels.gru['3h'].r2.toFixed(4)],
+        ['6 hours', stationModels.gru['6h'].rmse.toFixed(4), stationModels.gru['6h'].mae.toFixed(4), stationModels.gru['6h'].r2.toFixed(4)],
+      ]
+    } else {
+      // Comparación de modelos de clasificación
+      const tnnMetrics = selectedModel === 'tnn' ? stationModels.tnn[tnnHorizon] : stationModels.tnn['1h']
+      comparisonTable = [
+        ['Model', 'Accuracy', 'Macro F1', 'Precision', 'Recall'],
+        ['TNN', `${(tnnMetrics.accuracy * 100).toFixed(1)}%`, `${(tnnMetrics.macroF1 * 100).toFixed(1)}%`, `${(tnnMetrics.precision * 100).toFixed(1)}%`, `${(tnnMetrics.recall * 100).toFixed(1)}%`],
+        ['RNN', `${(stationModels.rnn.accuracy * 100).toFixed(1)}%`, `${(stationModels.rnn.macroF1 * 100).toFixed(1)}%`, `${(stationModels.rnn.precision * 100).toFixed(1)}%`, `${(stationModels.rnn.recall * 100).toFixed(1)}%`],
+        ['LSTM', `${(stationModels.lstm.accuracy * 100).toFixed(1)}%`, `${(stationModels.lstm.macroF1 * 100).toFixed(1)}%`, `${(stationModels.lstm.precision * 100).toFixed(1)}%`, `${(stationModels.lstm.recall * 100).toFixed(1)}%`],
+        ['LNN', `${(stationModels.lnn.accuracy * 100).toFixed(1)}%`, `${(stationModels.lnn.macroF1 * 100).toFixed(1)}%`, `${(stationModels.lnn.precision * 100).toFixed(1)}%`, `${(stationModels.lnn.recall * 100).toFixed(1)}%`],
+      ]
+    }
     
     doc.autoTable({
       startY: finalY + 5,
@@ -287,14 +339,30 @@ const DashboardMLExpert = ({ darkMode, toggleDarkMode, language, toggleLanguage 
     doc.setTextColor(...primaryColor)
     doc.text('Feature Importance', 20, finalY)
     
-    const featureTable = [
-      ['Feature', 'Importance', 'Impact'],
-      ['Temperatura Actual', '28%', 'High'],
-      ['Humedad Relativa', '24%', 'High'],
-      ['Presión Atmosférica', '21%', 'Medium'],
-      ['Velocidad del Viento', '15%', 'Medium'],
-      ['Estación del Año', '12%', 'Low'],
-    ]
+    let featureTable
+    if (selectedModel === 'gru') {
+      featureTable = [
+        ['Feature', 'Importance', 'Impact'],
+        ['Rain Lag 1h', '28%', 'High'],
+        ['Solar Radiation (SlrkW)', '19%', 'High'],
+        ['Wind Speed', '16%', 'Medium'],
+        ['Net Radiation', '14%', 'Medium'],
+        ['Soil Moisture (VW)', '11%', 'Medium'],
+        ['Hour (Sin/Cos)', '7%', 'Low'],
+        ['Month (Seasonality)', '5%', 'Low'],
+      ]
+    } else {
+      featureTable = [
+        ['Feature', 'Importance', 'Impact'],
+        ['Humidity El Junco', '24%', 'High'],
+        ['Temp El Mirador', '19%', 'High'],
+        ['Wind Speed', '16%', 'Medium'],
+        ['Pressure', '14%', 'Medium'],
+        ['Radiation', '12%', 'Medium'],
+        ['Soil Moisture', '9%', 'Low'],
+        ['Leaf Wetness', '6%', 'Low']
+      ]
+    }
     
     doc.autoTable({
       startY: finalY + 5,
@@ -320,8 +388,9 @@ const DashboardMLExpert = ({ darkMode, toggleDarkMode, language, toggleLanguage 
       doc.text(`Page ${i} of ${pageCount}`, 190, 285, { align: 'right' })
     }
     
-    // Guardar PDF
-    doc.save(`Nimbus_ML_Report_${modelName}_${new Date().toISOString().split('T')[0]}.pdf`)
+    // Guardar PDF con nombre descriptivo
+    const horizon = selectedModel === 'tnn' ? `_${tnnHorizon}` : selectedModel === 'gru' ? `_${gruHorizon}` : ''
+    doc.save(`Nimbus_ML_Report_${modelName}${horizon}_${selectedStation}_${new Date().toISOString().split('T')[0]}.pdf`)
     
     setExportStatus('success')
     setTimeout(() => setExportStatus(null), 3000)
