@@ -13,7 +13,7 @@ const DashboardMeteorologistStations = ({ darkMode, toggleDarkMode, language, to
   const stations = [
     {
       id: 1,
-      name: 'Costa Station',
+      name: 'Cerro Alto',
       location: 'San Cristóbal Coastal Area',
       elevation: '10m',
       coordinates: '0.8971°S, 89.6079°W',
@@ -48,7 +48,7 @@ const DashboardMeteorologistStations = ({ darkMode, toggleDarkMode, language, to
     },
     {
       id: 2,
-      name: 'Nivel Medio',
+      name: 'Merceditas',
       location: 'Mid-Elevation Forest Zone',
       elevation: '250m',
       coordinates: '0.8856°S, 89.5947°W',
@@ -83,12 +83,12 @@ const DashboardMeteorologistStations = ({ darkMode, toggleDarkMode, language, to
     },
     {
       id: 3,
-      name: 'Nivel Alto',
+      name: 'El Junco (JUN)',
       location: 'Highland Plateau',
-      elevation: '450m',
+      elevation: '650m',
       coordinates: '0.8734°S, 89.5823°W',
       status: 'active',
-      uptime: '97.2%',
+      uptime: '99.2%',
       installDate: 'June 2015',
       lastMaintenance: 'March 2026',
       sensors: [
@@ -118,7 +118,7 @@ const DashboardMeteorologistStations = ({ darkMode, toggleDarkMode, language, to
     },
     {
       id: 4,
-      name: 'Cumbre',
+      name: 'El Mirador',
       location: 'Summit Peak',
       elevation: '850m',
       coordinates: '0.8612°S, 89.5701°W',

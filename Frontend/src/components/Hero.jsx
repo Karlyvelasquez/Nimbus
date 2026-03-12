@@ -117,7 +117,7 @@ const Hero = ({ language, darkMode }) => {
                 className="flex flex-col sm:flex-row items-center lg:items-start gap-4"
               >
                 <a
-                  href="/Nimbus_Technical_Documentation.pdf"
+                  href="https://unaulaedu-my.sharepoint.com/:b:/g/personal/karly_velasquez0845_unaula_edu_co/IQD9z0jzmL_kSoJP6T0PxMQlAX7Ziga6BSrFA6COgIEXAxA?e=0fTzqS"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="group flex items-center space-x-2 bg-nimbus-blue hover:bg-nimbus-dark dark:bg-nimbus-cream dark:hover:bg-nimbus-light text-white dark:text-nimbus-dark px-6 py-3 rounded-lg font-bold transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1"

@@ -1,0 +1,29 @@
+{
+  "umbral_leve": 0.1,
+  "umbral_fuerte": 2.0,
+  "look_back": 24,
+  "n_classes": 3,
+  "class_labels": {
+    "0": "Sin lluvia",
+    "1": "Lluvia leve",
+    "2": "Lluvia fuerte"
+  },
+  "features": [
+    "SlrkW_Avg",
+    "SlrMJ_Tot",
+    "WS_ms_Avg",
+    "NR_Wm2_Avg",
+    "VW",
+    "VW_2",
+    "VW_3",
+    "WindDir",
+    "Rain_mm_Tot",
+    "hour_sin",
+    "hour_cos",
+    "month_sin",
+    "month_cos",
+    "Rain_lag1",
+    "Rain_lag2",
+    "Rain_lag3"
+  ]
+}

@@ -13,20 +13,22 @@ const DashboardCommunityEducation = ({ darkMode, toggleDarkMode, language, toggl
       description: language === 'es' 
         ? 'Aprende a interpretar pronósticos, probabilidades y tipos de precipitación.'
         : 'Learn to interpret forecasts, probabilities, and precipitation types.',
-      type: 'PDF',
+      type: 'Web',
       icon: FileText,
       color: 'bg-nimbus-blue',
+      url: 'https://www.meteorologiaenred.com/guia-completa-de-pronosticos-extendidos-como-interpretar-el-clima-para-manana-y-la-semana.html',
     },
     {
       id: 2,
       category: language === 'es' ? 'Videos Educativos' : 'Educational Videos',
-      title: language === 'es' ? '¿Cómo Funciona NIMBUS?' : 'How Does NIMBUS Work?',
+      title: language === 'es' ? 'Cambio Climático en América Latina' : 'Climate Change in Latin America',
       description: language === 'es' 
-        ? 'Video explicativo sobre el sistema de IA y las estaciones meteorológicas.'
-        : 'Explanatory video about the AI system and weather stations.',
+        ? 'Conoce los efectos del cambio climático en nuestra región y cómo adaptarnos.'
+        : 'Learn about climate change effects in our region and how to adapt.',
       type: 'Video',
       icon: Video,
       color: 'bg-nimbus-dark',
+      url: 'https://latinclima.org/es/videos/video-accion-climatica-en-ciudades-de-america-latina-y-el-caribe',
     },
     {
       id: 3,
@@ -35,9 +37,10 @@ const DashboardCommunityEducation = ({ darkMode, toggleDarkMode, language, toggl
       description: language === 'es' 
         ? 'Crea tu plan familiar para estar preparado ante eventos climáticos.'
         : 'Create your family plan to be prepared for weather events.',
-      type: 'PDF',
+      type: 'Web',
       icon: FileText,
       color: 'bg-nimbus-blue',
+      url: 'https://www.ifrc.org/es/preparacion-para-desastres',
     },
     {
       id: 4,
@@ -46,20 +49,22 @@ const DashboardCommunityEducation = ({ darkMode, toggleDarkMode, language, toggl
       description: language === 'es' 
         ? 'Medidas de seguridad y protocolos de actuación durante precipitaciones.'
         : 'Safety measures and action protocols during precipitation.',
-      type: 'PDF',
+      type: 'Web',
       icon: FileText,
       color: 'bg-nimbus-dark',
+      url: 'https://www.cruzroja.es/principal/web/cruz-roja/emergencias/que-hacer-en-caso-de-inundacion',
     },
     {
       id: 5,
       category: language === 'es' ? 'Tecnología' : 'Technology',
-      title: language === 'es' ? 'Inteligencia Artificial en Meteorología' : 'AI in Meteorology',
+      title: language === 'es' ? 'Alerta Temprana Comunitaria' : 'Community Early Warning',
       description: language === 'es' 
-        ? 'Descubre cómo la IA mejora las predicciones climáticas.'
-        : 'Discover how AI improves weather predictions.',
-      type: 'Video',
+        ? 'Sistemas de alerta temprana para comunidades vulnerables en América Latina.'
+        : 'Early warning systems for vulnerable communities in Latin America.',
+      type: 'Web',
       icon: Video,
       color: 'bg-nimbus-blue',
+      url: 'https://www.undrr.org/es/alerta-temprana-para-todos',
     },
     {
       id: 6,
@@ -68,9 +73,10 @@ const DashboardCommunityEducation = ({ darkMode, toggleDarkMode, language, toggl
       description: language === 'es' 
         ? 'Comprende los diferentes tipos de alertas y cómo responder.'
         : 'Understand different alert types and how to respond.',
-      type: 'PDF',
+      type: 'Web',
       icon: FileText,
       color: 'bg-nimbus-dark',
+      url: 'https://www.cepredenac.org/',
     },
   ]
 
@@ -149,12 +155,17 @@ const DashboardCommunityEducation = ({ darkMode, toggleDarkMode, language, toggl
                   <span className="text-xs font-semibold text-nimbus-dark/60 dark:text-nimbus-light/60">
                     {resource.type}
                   </span>
-                  <button className="flex items-center space-x-1 text-nimbus-blue hover:text-nimbus-dark dark:hover:text-nimbus-light transition-colors">
+                  <a 
+                    href={resource.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center space-x-1 text-nimbus-blue hover:text-nimbus-dark dark:hover:text-nimbus-light transition-colors"
+                  >
                     <span className="text-sm font-semibold">
                       {language === 'es' ? 'Ver' : 'View'}
                     </span>
                     <ExternalLink className="w-4 h-4" />
-                  </button>
+                  </a>
                 </div>
               </div>
             ))}

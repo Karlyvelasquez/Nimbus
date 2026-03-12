@@ -21,10 +21,10 @@ const DashboardMeteorologistLiveData = ({ darkMode, toggleDarkMode, language, to
 
   // Real-time data streams
   const stations = [
-    { id: 1, name: 'Costa Station', elevation: '10m' },
-    { id: 2, name: 'Nivel Medio', elevation: '250m' },
-    { id: 3, name: 'Nivel Alto', elevation: '450m' },
-    { id: 4, name: 'Cumbre', elevation: '850m' },
+    { id: 1, name: 'El Junco (JUN)', elevation: '650m' },
+    { id: 2, name: 'Cerro Alto', elevation: '10m' },
+    { id: 3, name: 'Merceditas', elevation: '250m' },
+    { id: 4, name: 'El Mirador', elevation: '850m' },
   ]
 
   // Generate real-time data for last 2 hours (120 points = every minute)
@@ -34,14 +34,14 @@ const DashboardMeteorologistLiveData = ({ darkMode, toggleDarkMode, language, to
       const hour = new Date(Date.now() - minutesAgo * 60000)
       return {
         time: hour.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' }),
-        costa_temp: 24 + Math.sin(i / 10) * 2 + Math.random() * 0.5,
-        medio_temp: 21 + Math.sin(i / 10) * 1.5 + Math.random() * 0.5,
-        alto_temp: 18 + Math.sin(i / 10) * 1 + Math.random() * 0.5,
-        cumbre_temp: 14 + Math.sin(i / 10) * 1 + Math.random() * 0.5,
-        costa_rain: Math.max(0, Math.sin(i / 20) * 5 + Math.random() * 2),
-        medio_rain: Math.max(0, Math.sin(i / 20) * 8 + Math.random() * 3),
-        alto_rain: Math.max(0, Math.sin(i / 20) * 12 + Math.random() * 4),
-        cumbre_rain: Math.max(0, Math.sin(i / 20) * 15 + Math.random() * 5),
+        junco_temp: 18 + Math.sin(i / 10) * 1.5 + Math.random() * 0.5,
+        cerroAlto_temp: 24 + Math.sin(i / 10) * 2 + Math.random() * 0.5,
+        merceditas_temp: 21 + Math.sin(i / 10) * 1.5 + Math.random() * 0.5,
+        mirador_temp: 14 + Math.sin(i / 10) * 1 + Math.random() * 0.5,
+        junco_rain: Math.max(0, Math.sin(i / 20) * 8 + Math.random() * 3),
+        cerroAlto_rain: Math.max(0, Math.sin(i / 20) * 5 + Math.random() * 2),
+        merceditas_rain: Math.max(0, Math.sin(i / 20) * 8 + Math.random() * 3),
+        mirador_rain: Math.max(0, Math.sin(i / 20) * 15 + Math.random() * 5),
       }
     })
   }
@@ -60,7 +60,18 @@ const DashboardMeteorologistLiveData = ({ darkMode, toggleDarkMode, language, to
   // Current readings
   const currentReadings = [
     {
-      station: 'Costa Station',
+      station: 'El Junco (JUN)',
+      metrics: [
+        { icon: Thermometer, label: 'Temperature', value: '18.2°C', color: 'text-red-500' },
+        { icon: Droplets, label: 'Humidity', value: '85%', color: 'text-blue-500' },
+        { icon: Wind, label: 'Wind Speed', value: '14 km/h', color: 'text-green-500' },
+        { icon: CloudRain, label: 'Rainfall', value: '0.5 mm/h', color: 'text-purple-500' },
+        { icon: Eye, label: 'Visibility', value: '8 km', color: 'text-orange-500' },
+        { icon: Activity, label: 'Pressure', value: '1008 hPa', color: 'text-pink-500' },
+      ],
+    },
+    {
+      station: 'Cerro Alto',
       metrics: [
         { icon: Thermometer, label: 'Temperature', value: '24.5°C', color: 'text-red-500' },
         { icon: Droplets, label: 'Humidity', value: '78%', color: 'text-blue-500' },
@@ -71,35 +82,24 @@ const DashboardMeteorologistLiveData = ({ darkMode, toggleDarkMode, language, to
       ],
     },
     {
-      station: 'Nivel Medio',
+      station: 'Merceditas',
       metrics: [
         { icon: Thermometer, label: 'Temperature', value: '21.3°C', color: 'text-red-500' },
         { icon: Droplets, label: 'Humidity', value: '82%', color: 'text-blue-500' },
         { icon: Wind, label: 'Wind Speed', value: '15 km/h', color: 'text-green-500' },
-        { icon: CloudRain, label: 'Rainfall', value: '2.3 mm/h', color: 'text-purple-500' },
+        { icon: CloudRain, label: 'Rainfall', value: '0.2 mm/h', color: 'text-purple-500' },
         { icon: Eye, label: 'Visibility', value: '8 km', color: 'text-orange-500' },
         { icon: Activity, label: 'Pressure', value: '1010 hPa', color: 'text-pink-500' },
       ],
     },
     {
-      station: 'Nivel Alto',
-      metrics: [
-        { icon: Thermometer, label: 'Temperature', value: '18.7°C', color: 'text-red-500' },
-        { icon: Droplets, label: 'Humidity', value: '88%', color: 'text-blue-500' },
-        { icon: Wind, label: 'Wind Speed', value: '18 km/h', color: 'text-green-500' },
-        { icon: CloudRain, label: 'Rainfall', value: '5.1 mm/h', color: 'text-purple-500' },
-        { icon: Eye, label: 'Visibility', value: '5 km', color: 'text-orange-500' },
-        { icon: Activity, label: 'Pressure', value: '1008 hPa', color: 'text-pink-500' },
-      ],
-    },
-    {
-      station: 'Cumbre',
+      station: 'El Mirador',
       metrics: [
         { icon: Thermometer, label: 'Temperature', value: '14.2°C', color: 'text-red-500' },
-        { icon: Droplets, label: 'Humidity', value: '95%', color: 'text-blue-500' },
-        { icon: Wind, label: 'Wind Speed', value: '24 km/h', color: 'text-green-500' },
-        { icon: CloudRain, label: 'Rainfall', value: '12.4 mm/h', color: 'text-purple-500' },
-        { icon: Eye, label: 'Visibility', value: '2 km', color: 'text-orange-500' },
+        { icon: Droplets, label: 'Humidity', value: '92%', color: 'text-blue-500' },
+        { icon: Wind, label: 'Wind Speed', value: '18 km/h', color: 'text-green-500' },
+        { icon: CloudRain, label: 'Rainfall', value: '1.8 mm/h', color: 'text-purple-500' },
+        { icon: Eye, label: 'Visibility', value: '5 km', color: 'text-orange-500' },
         { icon: Activity, label: 'Pressure', value: '1002 hPa', color: 'text-pink-500' },
       ],
     },
@@ -174,10 +174,10 @@ const DashboardMeteorologistLiveData = ({ darkMode, toggleDarkMode, language, to
               <YAxis stroke="#083559" label={{ value: '°C', angle: -90, position: 'insideLeft' }} />
               <Tooltip />
               <Legend />
-              <Line type="monotone" dataKey="costa_temp" stroke="#083559" name="Costa" dot={false} strokeWidth={2} />
-              <Line type="monotone" dataKey="medio_temp" stroke="#4d6e91" name="Medio" dot={false} strokeWidth={2} />
-              <Line type="monotone" dataKey="alto_temp" stroke="#10b981" name="Alto" dot={false} strokeWidth={2} />
-              <Line type="monotone" dataKey="cumbre_temp" stroke="#f59e0b" name="Cumbre" dot={false} strokeWidth={2} />
+              <Line type="monotone" dataKey="junco_temp" stroke="#2196F3" name="El Junco (TNN)" dot={false} strokeWidth={3} />
+              <Line type="monotone" dataKey="cerroAlto_temp" stroke="#083559" name="Cerro Alto" dot={false} strokeWidth={2} />
+              <Line type="monotone" dataKey="merceditas_temp" stroke="#4d6e91" name="Merceditas" dot={false} strokeWidth={2} />
+              <Line type="monotone" dataKey="mirador_temp" stroke="#f59e0b" name="El Mirador" dot={false} strokeWidth={2} />
             </LineChart>
           </ResponsiveContainer>
         </div>
@@ -195,9 +195,10 @@ const DashboardMeteorologistLiveData = ({ darkMode, toggleDarkMode, language, to
               <YAxis stroke="#083559" label={{ value: 'mm/h', angle: -90, position: 'insideLeft' }} />
               <Tooltip />
               <Legend />
-              <Area type="monotone" dataKey="costa_rain" stackId="1" stroke="#083559" fill="#083559" fillOpacity={0.6} name="Costa" />
-              <Area type="monotone" dataKey="medio_rain" stackId="1" stroke="#4d6e91" fill="#4d6e91" fillOpacity={0.6} name="Medio" />
-              <Area type="monotone" dataKey="alto_rain" stackId="1" stroke="#10b981" fill="#10b981" fillOpacity={0.6} name="Alto" />
+              <Area type="monotone" dataKey="junco_rain" stackId="1" stroke="#2196F3" fill="#2196F3" fillOpacity={0.6} name="El Junco" />
+              <Area type="monotone" dataKey="cerroAlto_rain" stackId="1" stroke="#083559" fill="#083559" fillOpacity={0.6} name="Cerro Alto" />
+              <Area type="monotone" dataKey="merceditas_rain" stackId="1" stroke="#4d6e91" fill="#4d6e91" fillOpacity={0.6} name="Merceditas" />
+              <Area type="monotone" dataKey="mirador_rain" stackId="1" stroke="#f59e0b" fill="#f59e0b" fillOpacity={0.6} name="El Mirador" />
               <Area type="monotone" dataKey="cumbre_rain" stackId="1" stroke="#f59e0b" fill="#f59e0b" fillOpacity={0.6} name="Cumbre" />
             </AreaChart>
           </ResponsiveContainer>

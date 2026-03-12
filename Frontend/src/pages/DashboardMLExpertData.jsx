@@ -11,58 +11,47 @@ const DashboardMLExpertData = ({ darkMode, toggleDarkMode, language, toggleLangu
   const datasets = [
     {
       id: 1,
-      name: 'Costa Station Dataset',
-      station: 'Costa',
-      records: 2847,
+      name: 'JUN_consolid_f15.csv',
+      station: 'El Junco',
+      records: 4850,
       dateRange: '2015-2026',
-      size: '45.2 MB',
+      size: '52.3 MB',
       status: 'active',
       lastUpdate: '2h ago',
       quality: 98.5,
     },
     {
       id: 2,
-      name: 'Nivel Medio Dataset',
-      station: 'Medio',
-      records: 2693,
+      name: 'CER_consolid_f15.csv',
+      station: 'Cerro Alto',
+      records: 4620,
       dateRange: '2015-2026',
-      size: '42.8 MB',
+      size: '49.7 MB',
       status: 'active',
       lastUpdate: '2h ago',
       quality: 97.2,
     },
     {
       id: 3,
-      name: 'Nivel Alto Dataset',
-      station: 'Alto',
-      records: 2451,
+      name: 'MERC_consolid_f15.csv',
+      station: 'Merceditas',
+      records: 4380,
       dateRange: '2015-2026',
-      size: '39.1 MB',
+      size: '47.1 MB',
       status: 'active',
       lastUpdate: '2h ago',
-      quality: 95.8,
+      quality: 96.8,
     },
     {
       id: 4,
-      name: 'Cumbre Station Dataset',
-      station: 'Cumbre',
-      records: 2218,
+      name: 'MIRA_consolid_f15.csv',
+      station: 'El Mirador',
+      records: 4150,
       dateRange: '2015-2026',
-      size: '35.4 MB',
-      status: 'processing',
-      lastUpdate: '5m ago',
-      quality: 94.1,
-    },
-    {
-      id: 5,
-      name: 'Historical Weather Archive',
-      station: 'All',
-      records: 10209,
-      dateRange: '2015-2026',
-      size: '162.5 MB',
+      size: '44.6 MB',
       status: 'active',
-      lastUpdate: '1d ago',
-      quality: 96.4,
+      lastUpdate: '2h ago',
+      quality: 95.4,
     },
   ]
 
@@ -267,10 +256,10 @@ const DashboardMLExpertData = ({ darkMode, toggleDarkMode, language, toggleLangu
               className="px-4 py-3 rounded-lg border-2 border-nimbus-cream dark:border-nimbus-blue/20 bg-white dark:bg-nimbus-blue/5 text-nimbus-dark dark:text-nimbus-light focus:border-nimbus-blue dark:focus:border-nimbus-cream outline-none transition-colors"
             >
               <option value="all">All Stations</option>
-              <option value="Costa">Costa</option>
-              <option value="Medio">Nivel Medio</option>
-              <option value="Alto">Nivel Alto</option>
-              <option value="Cumbre">Cumbre</option>
+              <option value="El Junco">El Junco (JUN)</option>
+              <option value="Cerro Alto">Cerro Alto (CER)</option>
+              <option value="Merceditas">Merceditas (MERC)</option>
+              <option value="El Mirador">El Mirador (MIRA)</option>
             </select>
           </div>
 

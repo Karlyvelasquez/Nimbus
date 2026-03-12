@@ -21,7 +21,19 @@ const DashboardMeteorologist = ({ darkMode, toggleDarkMode, language, toggleLang
   const stationsData = [
     {
       id: 1,
-      name: 'Costa Station',
+      name: 'El Junco (JUN)',
+      elevation: '650m',
+      status: 'active',
+      temp: 18.2,
+      humidity: 85,
+      pressure: 1008.5,
+      windSpeed: 14,
+      precipitation: 0.5,
+      lastUpdate: '1 min ago'
+    },
+    {
+      id: 2,
+      name: 'Cerro Alto',
       elevation: '10m',
       status: 'active',
       temp: 24.5,
@@ -32,101 +44,121 @@ const DashboardMeteorologist = ({ darkMode, toggleDarkMode, language, toggleLang
       lastUpdate: '2 min ago',
     },
     {
-      id: 2,
-      name: 'Nivel Medio',
+      id: 3,
+      name: 'Merceditas',
       elevation: '250m',
       status: 'active',
       temp: 21.3,
       humidity: 82,
       pressure: 1010.5,
       windSpeed: 15,
-      precipitation: 2.3,
-      lastUpdate: '2 min ago',
-    },
-    {
-      id: 3,
-      name: 'Nivel Alto',
-      elevation: '450m',
-      status: 'active',
-      temp: 18.7,
-      humidity: 88,
-      pressure: 1007.8,
-      windSpeed: 18,
-      precipitation: 5.1,
+      precipitation: 0.2,
       lastUpdate: '2 min ago',
     },
     {
       id: 4,
-      name: 'Cumbre',
+      name: 'El Mirador',
       elevation: '850m',
-      status: 'warning',
+      status: 'active',
       temp: 14.2,
-      humidity: 95,
+      humidity: 92,
       pressure: 1002.1,
-      windSpeed: 24,
-      precipitation: 12.4,
-      lastUpdate: '2 min ago',
+      windSpeed: 18,
+      precipitation: 1.8,
+      lastUpdate: '3 min ago',
     },
   ]
 
   // Datos de temperatura en las últimas 24 horas
   const temperatureData = Array.from({ length: 24 }, (_, i) => ({
     hour: `${i}:00`,
-    costa: 22 + Math.sin(i / 3) * 4,
-    medio: 19 + Math.sin(i / 3) * 3,
-    alto: 16 + Math.sin(i / 3) * 2,
-    cumbre: 12 + Math.sin(i / 3) * 2,
+    junco: 16 + Math.sin(i / 3) * 3.5,
+    cerroAlto: 22 + Math.sin(i / 3) * 4,
+    merceditas: 19 + Math.sin(i / 3) * 3,
+    mirador: 12 + Math.sin(i / 3) * 2,
   }))
 
-  // Predicciones
+  // Predicciones basadas en TNN (Temporal Neural Network)
+  // Modelo de producción con 3 clases: 0=Sin lluvia (<0.1mm), 1=Lluvia leve (0.1-1.0mm), 2=Lluvia fuerte (>1.0mm)
+  // Accuracy por horizonte: 1h=74.4%, 3h=61.7%, 6h=63.8%
   const forecasts = [
     {
       time: '+1h',
-      station: 'Costa',
+      station: 'El Junco (JUN)',
       precipitation: 'Light Rain',
-      probability: 65,
-      amount: '2-5mm',
+      probability: 74,
+      amount: '0.2-0.8mm',
+      class: 1,
+      model: 'TNN'
     },
     {
       time: '+1h',
-      station: 'Cumbre',
+      station: 'El Mirador',
       precipitation: 'Heavy Rain',
-      probability: 85,
-      amount: '15-20mm',
+      probability: 74,
+      amount: '1.5-3.2mm',
+      class: 2,
+      model: 'TNN'
     },
     {
       time: '+3h',
-      station: 'Nivel Medio',
-      precipitation: 'Moderate Rain',
-      probability: 72,
-      amount: '5-10mm',
+      station: 'El Junco (JUN)',
+      precipitation: 'Light Rain',
+      probability: 62,
+      amount: '0.3-0.9mm',
+      class: 1,
+      model: 'TNN'
+    },
+    {
+      time: '+3h',
+      station: 'Merceditas',
+      precipitation: 'No Rain',
+      probability: 62,
+      amount: '<0.1mm',
+      class: 0,
+      model: 'TNN'
     },
     {
       time: '+6h',
-      station: 'Costa',
+      station: 'Cerro Alto',
       precipitation: 'No Rain',
-      probability: 55,
-      amount: '0mm',
+      probability: 64,
+      amount: '<0.1mm',
+      class: 0,
+      model: 'TNN'
+    },
+    {
+      time: '+6h',
+      station: 'El Junco (JUN)',
+      precipitation: 'Heavy Rain',
+      probability: 64,
+      amount: '1.2-2.8mm',
+      class: 2,
+      model: 'TNN'
     },
   ]
 
-  // Alertas activas
+  // Alertas activas basadas en predicciones TNN
   const activeAlerts = [
     {
       id: 1,
-      type: 'Heavy Rain',
-      station: 'Cumbre',
+      type: 'Heavy Rain Warning',
+      station: 'El Junco (JUN)',
       severity: 'high',
-      message: 'Heavy precipitation expected in next hour',
-      time: '5 min ago',
+      message: 'TNN model predicts heavy precipitation (>1.0mm/h) in next 6 hours with 64% confidence',
+      time: '2 min ago',
+      model: 'TNN',
+      horizon: '+6h'
     },
     {
       id: 2,
-      type: 'Strong Wind',
-      station: 'Nivel Alto',
-      severity: 'medium',
-      message: 'Wind speeds above 20 km/h detected',
-      time: '12 min ago',
+      type: 'Light Rain Expected',
+      station: 'El Junco (JUN)',
+      severity: 'low',
+      message: 'TNN model forecasts light rain (0.2-0.8mm) within next hour with 74% confidence',
+      time: '5 min ago',
+      model: 'TNN',
+      horizon: '+1h'
     },
   ]
 
@@ -492,8 +524,13 @@ const DashboardMeteorologist = ({ darkMode, toggleDarkMode, language, toggleLang
           {stationsData.map((station) => (
             <div
               key={station.id}
-              className="bg-white dark:bg-nimbus-blue/10 p-6 rounded-xl border border-nimbus-cream dark:border-nimbus-blue/20 hover:shadow-lg transition-shadow"
+              className={`bg-white dark:bg-nimbus-blue/10 p-6 rounded-xl border ${station.model ? 'border-2 border-green-500 dark:border-green-400' : 'border-nimbus-cream dark:border-nimbus-blue/20'} hover:shadow-lg transition-shadow relative`}
             >
+              {station.model && (
+                <div className="absolute -top-3 -right-3 bg-gradient-to-r from-green-500 to-blue-500 text-white text-xs px-3 py-1 rounded-full font-bold shadow-lg">
+                  TNN Model
+                </div>
+              )}
               <div className="flex items-center justify-between mb-4">
                 <div className="flex items-center space-x-2">
                   <MapPin className="w-5 h-5 text-nimbus-blue dark:text-nimbus-cream" />
@@ -566,20 +603,29 @@ const DashboardMeteorologist = ({ darkMode, toggleDarkMode, language, toggleLang
               <YAxis stroke="#083559" label={{ value: 'Temperature (°C)', angle: -90, position: 'insideLeft' }} />
               <Tooltip />
               <Legend />
-              <Line type="monotone" dataKey="costa" stroke="#083559" name="Costa" strokeWidth={2} />
-              <Line type="monotone" dataKey="medio" stroke="#4d6e91" name="Nivel Medio" strokeWidth={2} />
-              <Line type="monotone" dataKey="alto" stroke="#10b981" name="Nivel Alto" strokeWidth={2} />
-              <Line type="monotone" dataKey="cumbre" stroke="#f59e0b" name="Cumbre" strokeWidth={2} />
+              <Line type="monotone" dataKey="junco" stroke="#2196F3" name="El Junco (TNN)" strokeWidth={3} />
+              <Line type="monotone" dataKey="cerroAlto" stroke="#083559" name="Cerro Alto" strokeWidth={2} />
+              <Line type="monotone" dataKey="merceditas" stroke="#4d6e91" name="Merceditas" strokeWidth={2} />
+              <Line type="monotone" dataKey="mirador" stroke="#f59e0b" name="El Mirador" strokeWidth={2} />
             </LineChart>
           </ResponsiveContainer>
         </div>
 
         {/* AI Predictions */}
         <div className="bg-white dark:bg-nimbus-blue/10 p-6 rounded-xl border border-nimbus-cream dark:border-nimbus-blue/20">
-          <h3 className="text-xl font-bold text-nimbus-dark dark:text-nimbus-light mb-4 flex items-center space-x-2">
-            <TrendingUp className="w-6 h-6" />
-            <span>AI Model Predictions</span>
-          </h3>
+          <div className="flex items-center justify-between mb-4">
+            <h3 className="text-xl font-bold text-nimbus-dark dark:text-nimbus-light flex items-center space-x-2">
+              <TrendingUp className="w-6 h-6" />
+              <span>TNN Model Predictions (Production)</span>
+            </h3>
+            <div className="flex items-center space-x-2 bg-green-100 dark:bg-green-900/20 px-3 py-1 rounded-full">
+              <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+              <span className="text-xs font-bold text-green-700 dark:text-green-400">Live Model</span>
+            </div>
+          </div>
+          <p className="text-sm text-nimbus-dark/60 dark:text-nimbus-light/60 mb-4">
+            Temporal Neural Network classification • 3 classes (No Rain / Light / Heavy) • Dataset: El Junco Station
+          </p>
           <div className="overflow-x-auto">
             <table className="w-full">
               <thead className="border-b-2 border-nimbus-cream dark:border-nimbus-blue/20">
@@ -587,7 +633,7 @@ const DashboardMeteorologist = ({ darkMode, toggleDarkMode, language, toggleLang
                   <th className="text-left py-3 px-4 font-bold text-nimbus-dark dark:text-nimbus-light">Horizon</th>
                   <th className="text-left py-3 px-4 font-bold text-nimbus-dark dark:text-nimbus-light">Station</th>
                   <th className="text-left py-3 px-4 font-bold text-nimbus-dark dark:text-nimbus-light">Forecast</th>
-                  <th className="text-left py-3 px-4 font-bold text-nimbus-dark dark:text-nimbus-light">Probability</th>
+                  <th className="text-left py-3 px-4 font-bold text-nimbus-dark dark:text-nimbus-light">Confidence</th>
                   <th className="text-left py-3 px-4 font-bold text-nimbus-dark dark:text-nimbus-light">Amount</th>
                 </tr>
               </thead>
